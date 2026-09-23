@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS urls (
+  id BIGSERIAL PRIMARY KEY,
+  short_code VARCHAR(16) NOT NULL UNIQUE,
+  original_url TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  is_active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE INDEX IF NOT EXISTS urls_short_code_idx ON urls (short_code);
