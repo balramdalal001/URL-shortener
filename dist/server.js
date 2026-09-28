@@ -7,14 +7,17 @@ require("dotenv/config");
 const app_1 = require("./app");
 const redis_1 = __importDefault(require("./config/redis"));
 const migrations_1 = require("./config/migrations");
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT ?? 3000);
+if (!Number.isInteger(PORT) || PORT <= 0 || PORT > 65535) {
+    throw new Error("Invalid PORT environment variable");
+}
 async function startServer() {
     try {
         await (0, migrations_1.runMigrations)();
         console.log("Database migrations complete");
         await redis_1.default.connect();
         console.log("Redis connected");
-        app_1.app.listen(PORT, () => {
+        app_1.app.listen(PORT, "0.0.0.0", () => {
             console.log(`Server running on port ${PORT}`);
         });
     }

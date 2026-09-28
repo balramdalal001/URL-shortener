@@ -62,7 +62,6 @@ async function handleBulkUpload(userId, files) {
         // const savedPath = file?.path;         // Example: "uploads/abc123xyz"
         const fileSize = file?.size; // Size in bytes
         const mimeType = file?.mimetype; // Example: "image/jpeg"
-        console.log(`Uploaded ${fileName}`);
         if (!file) {
             throw new Error("Excel file is required");
         }
@@ -71,12 +70,10 @@ async function handleBulkUpload(userId, files) {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const data = xlsx_1.default.utils.sheet_to_json(worksheet);
-        console.log(data);
-        const job = await excel_queue_1.excelQueue.add("process-excel", {
+        const job = await excel_queue_1.excelQueue.add("customer-excel-processing", {
             filePath: file?.path
         });
         return { queued: true, jobId: job?.id, message: "File uploaded and queued for processing" };
-        // await createCustomer(filePath);
     }
     catch (error) {
         throw error;

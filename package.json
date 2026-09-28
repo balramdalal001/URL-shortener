@@ -21,6 +21,7 @@
     "express-rate-limit": "^8.7.0",
     "ioredis": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0",
     "pg": "^8.23.0",
     "redis": "^5.12.1",
     "xlsx": "^0.18.5",
@@ -36,7 +37,6 @@
     "@types/node": "^26.6.2",
     "@types/pg": "^8.23.1",
     "@types/xlsx": "^0.0.35",
-    "multer": "^2.4.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }

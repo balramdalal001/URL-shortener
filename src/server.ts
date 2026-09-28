@@ -3,7 +3,11 @@ import { app } from "./app";
 import redisClient from "./config/redis";
 import { runMigrations } from "./config/migrations";
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT ?? 3000);
+
+if (!Number.isInteger(PORT) || PORT <= 0 || PORT > 65535) {
+  throw new Error("Invalid PORT environment variable");
+}
 
 async function startServer() {
   try {
@@ -14,7 +18,7 @@ async function startServer() {
 
     console.log("Redis connected");
 
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {

@@ -31,7 +31,7 @@ exports.app.use(express_1.default.json());
 // Apply the rate limiting middleware globally to all routes
 exports.app.use(rateLimiter_1.globalLimiter);
 exports.app.use(upload); // Apply multer middleware globally to handle file uploads
-exports.app.get("/health", (_req, res) => res.json({ status: "ok" }));
+exports.app.get("/health", (_req, res) => res.json({ status: "ook", server: process.env.HOSTNAME }));
 exports.app.use(url_routes_1.urlRouter);
 exports.app.use(user_routes_1.userRouter);
 exports.app.use(error_handler_1.errorHandler);
