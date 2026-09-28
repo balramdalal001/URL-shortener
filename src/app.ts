@@ -34,7 +34,7 @@ app.use(globalLimiter);
 
 app.use(upload); // Apply multer middleware globally to handle file uploads
 
-app.get("/health", (_req, res) => res.json({ status: "ok" }));
+app.get("/health", (_req, res) => res.json({ status: "ook" ,server: process.env.HOSTNAME}));
 app.use(urlRouter);
 app.use(userRouter);
 app.use(errorHandler);
