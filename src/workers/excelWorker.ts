@@ -7,12 +7,10 @@ const worker = new Worker(
 
   async (job: Job) => {
     console.log(`Processing job ${job.id}`);
-
     const {
       filePath,
       originalName,
     } = job.data;
-
     console.log("File:", originalName);
     console.log("Path:", filePath);
 
