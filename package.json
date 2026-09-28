@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
+    "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "npm run build && node dist/server.js"
   },
@@ -13,22 +14,30 @@
   "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "bullmq": "^6.3.8",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
+    "ioredis": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.23.0",
-    "redis": "^4.7.0",
+    "redis": "^5.12.1",
+    "xlsx": "^0.18.5",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
+    "@types/ioredis": "^4.28.10",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.2.0",
     "@types/node": "^26.6.2",
     "@types/pg": "^8.23.1",
+    "@types/xlsx": "^0.0.35",
+    "multer": "^2.4.0",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }

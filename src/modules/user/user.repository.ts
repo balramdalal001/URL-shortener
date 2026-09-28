@@ -66,3 +66,33 @@ export async function getUserDetails(userId: string): Promise<UserDetailRes | nu
         throw error;
     }
 } 
+
+export async function createCustomer(filePath: string): Promise<void> {
+    try {
+        // Assuming you have a function to read the CSV file and return an array of user objects
+        // const users = await readCsvFile(filePath); // Implement this function to read the CSV
+
+        // for (const user of users) {
+        //     // Check if the email already exists
+        //     const checkEmail = await database.query<UsrRow>(
+        //         "SELECT * FROM users WHERE email = $1",
+        //         [user.email]
+        //     );
+        //     if (checkEmail.rows.length > 0) {
+        //         console.log(`Email ${user.email} already exists. Skipping.`);
+        //         continue; // Skip existing emails
+        //     }
+
+        //     // Hash the password before inserting
+        //     const saltRounds = 12;
+        //     const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+
+        //     await database.query(
+        //         "INSERT INTO users (email, password_hash) VALUES ($1, $2)",
+        //         [user.email, hashedPassword]
+        //     );
+        // }
+    } catch (error) {
+        throw error;
+    }
+}

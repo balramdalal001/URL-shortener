@@ -23,7 +23,7 @@ declare global {
 
 // 1. Helper to generate a token
 export const generateToken = (payload: UserPayload): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 };
 
 // 2. Middleware to authenticate requests

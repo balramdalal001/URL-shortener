@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-// import { redis } from "../../config/redis";
+import  redis  from "../../config/redis";
 import { env } from "../../config/env";
 import { createUrl, findUrlByCode ,AllUrlDetails} from "./url.repository";
 import { UrlRecord } from "./url.types";
@@ -14,7 +14,11 @@ export async function shortenUrl(originalUrl: string): Promise<UrlRecord> {
   for (let attempt = 0; attempt < 5; attempt += 1) {
     try {
       const record = await createUrl(generateCode(), originalUrl);
-    //   await redis.set(cacheKey(record.code), record.originalUrl);
+
+      //expire the cache after 5 minutes
+      await redis.set(cacheKey(record.code), JSON.stringify(record),{
+      EX: 300 
+    });
       return record;
     } catch (error) {
       if (attempt === 4) throw error;
@@ -25,26 +29,36 @@ export async function shortenUrl(originalUrl: string): Promise<UrlRecord> {
 }
 
 export async function resolveUrl(code: string): Promise<UrlRecord | null> {
-  // const cachedUrl = await redis.get(cacheKey(code));
-  // if (cachedUrl) return cachedUrl;
+  const cachedValue = await redis.get(cacheKey(code));
+  if (cachedValue) {
+      return JSON.parse(cachedValue) as UrlRecord;
+  }
   
-
  const record = await findUrlByCode(code);
   
-  if (!record) return null;
+  if (!record){
+      throw new Error("Short URL not found");
+  }
 
-  // await redis.set(cacheKey(code), record.originalUrl);
+  await redis.set(cacheKey(code), JSON.stringify(record),{
+    EX: 300 
+  });
   return record;
 }
 
 export async function getAllUrlDetails(): Promise<UrlRecord[] | null> {
-  // const cachedUrl = await redis.get(cacheKey(code));
-  // if (cachedUrl) return cachedUrl;
+  let key = "allUrls";
+  const cachedValue = await redis.get(cacheKey(key));
+   if (cachedValue) {
+      return JSON.parse(cachedValue) as UrlRecord[];
+  }
  const record = (await AllUrlDetails()) ?? null;
   
   if (!record) return null;
 
-  // await redis.set(cacheKey(code), record.originalUrl);
+  await redis.set(cacheKey(key), JSON.stringify(record),{
+    EX: 300 
+  });
   return record;
 }
 

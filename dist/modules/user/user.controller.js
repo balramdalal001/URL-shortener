@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refresh = exports.loginUser = exports.createUser = void 0;
+exports.bulkUpload = exports.refresh = exports.loginUser = exports.createUser = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_schema_1 = require("./user.schema");
 const user_service_1 = require("./user.service");
@@ -11,6 +11,17 @@ const auth_1 = require("../../middleware/auth");
 const env_1 = require("../../config/env");
 const JWT_REFRESH_SECRET = env_1.env.JWT_REFRESH_SECRET;
 const JWT_SECRET = env_1.env.JWT_SECRET;
+const getCookieValue = (cookieHeader, name) => {
+    if (!cookieHeader)
+        return undefined;
+    const cookie = cookieHeader
+        .split(";")
+        .map((entry) => entry.trim())
+        .find((entry) => entry.startsWith(`${name}=`));
+    if (!cookie)
+        return undefined;
+    return decodeURIComponent(cookie.slice(name.length + 1));
+};
 const createUser = async (req, res, next) => {
     try {
         const input = user_schema_1.userCreateSchema.safeParse(req.body);
@@ -87,4 +98,20 @@ const refresh = async (req, res, next) => {
     }
 };
 exports.refresh = refresh;
+const bulkUpload = async (req, res, next) => {
+    try {
+        // Assuming the user is authenticated and their ID is available in req.user
+        const userId = req.user?.userId; // Type assertion for custom property
+        if (!userId) {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
+        const result = await (0, user_service_1.handleBulkUpload)(userId, req?.file);
+        res.status(200).json({ message: 'Bulk upload successful', data: result });
+    }
+    catch (error) {
+        return next(error);
+    }
+};
+exports.bulkUpload = bulkUpload;
 //# sourceMappingURL=user.controller.js.map

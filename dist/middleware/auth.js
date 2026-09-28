@@ -10,7 +10,7 @@ const JWT_SECRET = env_1.env.JWT_SECRET;
 const JWT_REFRESH_SECRET = env_1.env.JWT_REFRESH_SECRET;
 // 1. Helper to generate a token
 const generateToken = (payload) => {
-    return jsonwebtoken_1.default.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+    return jsonwebtoken_1.default.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 };
 exports.generateToken = generateToken;
 // 2. Middleware to authenticate requests

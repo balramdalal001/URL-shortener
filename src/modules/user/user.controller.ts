@@ -1,12 +1,24 @@
 import { RequestHandler } from "express";
 import jwt from 'jsonwebtoken';
 import { userCreateSchema , userLoginSchema} from "./user.schema";
-import { newUser , verifyUser,getUserById} from "./user.service";
+import { newUser , verifyUser,getUserById,handleBulkUpload} from "./user.service";
 import { generateToken, refreshToken,UserPayload } from "../../middleware/auth";
 
 import { env } from "../../config/env";
 const JWT_REFRESH_SECRET = env.JWT_REFRESH_SECRET;
 const JWT_SECRET = env.JWT_SECRET;
+
+const getCookieValue = (cookieHeader: string | undefined, name: string): string | undefined => {
+  if (!cookieHeader) return undefined;
+
+  const cookie = cookieHeader
+    .split(";")
+    .map((entry) => entry.trim())
+    .find((entry) => entry.startsWith(`${name}=`));
+
+  if (!cookie) return undefined;
+  return decodeURIComponent(cookie.slice(name.length + 1));
+};
 
 export const createUser: RequestHandler = async (req, res, next) => {
   try {
@@ -87,5 +99,23 @@ export const refresh : RequestHandler = async (req,res,next) => {
     res.json({ accessToken: newAccessToken });
   } catch (err) {
     res.status(403).json({ message: 'Refresh token expired' });
+  }
+}
+
+export const bulkUpload: RequestHandler = async (req, res, next) => {
+  try {
+    // Assuming the user is authenticated and their ID is available in req.user
+    const userId = (req as any).user?.userId; // Type assertion for custom property
+
+    if (!userId) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
+    const result = await handleBulkUpload(userId, req?.file);
+
+    res.status(200).json({ message: 'Bulk upload successful', data: result });
+  } catch (error) {
+    return next(error);
   }
 }
